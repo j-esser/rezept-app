@@ -17,8 +17,10 @@ Doppelklick auf `index.html` → öffnet sich direkt im Browser via `file://`.
 | `index.html` | HTML-Skelett, lädt Tailwind CSS und mammoth.js via CDN |
 | `app.js` | Gesamte Anwendungslogik (~2200 Zeilen, 12 Sektionen) |
 | `styles.css` | Custom CSS (Tab-Leiste, Karten, Buttons, Print-Styles) |
-| `baseline-recipes.js` | 40 Basis-Rezepte — werden automatisch geladen wenn localStorage leer ist |
+| `baseline-recipes.js` | 40 Basis-Rezepte mit Nährwerten — werden automatisch geladen wenn localStorage leer ist |
 | `reset.html` | Hilfstool: löscht alle gespeicherten Daten (localStorage) |
+| `netlify.toml` | Netlify Build-Konfiguration (publish-Dir, Functions-Ordner) |
+| `netlify/functions/fetch-recipe.js` | Serverlose Funktion: lädt Rezept-URL server-seitig und extrahiert JSON-LD |
 
 ---
 
@@ -27,8 +29,11 @@ Doppelklick auf `index.html` → öffnet sich direkt im Browser via `file://`.
 ### Rezepte
 - Anlegen, bearbeiten, löschen
 - Felder: Titel, Kategorien (Tags), Kochzeit (Minuten), Portionen, Referenz (Kochbuch/URL), Zutaten mit Mengenangabe, Zubereitungsbeschreibung
+- Nährwerte pro Portion: kcal, Eiweiß (g), Fett (g), Kohlenhydrate (g) — manuell eingebbar oder automatisch beim URL-Import befüllt
+- kcal-Wert wird auf der Rezeptkarte angezeigt; vollständige Nährwerte im Detaildialog
+- Referenz-URLs werden als klickbarer Link angezeigt (öffnen in neuem Tab)
 - Jede Zutat wird automatisch einer Einkaufskategorie zugewiesen (siehe Klassifikation)
-- Beim ersten Start werden 40 Basis-Rezepte automatisch geladen (`baseline-recipes.js`)
+- Beim ersten Start werden 40 Basis-Rezepte automatisch geladen (`baseline-recipes.js`) — alle mit geschätzten Nährwerten vorbelegt
 
 ### Kategorien-Reiter
 Rezepte werden über eine horizontale Tab-Leiste gefiltert:
@@ -41,6 +46,7 @@ Jeder Tab zeigt die Anzahl der Rezepte in dieser Kategorie. Zusätzlich steht ei
 - Rezepte per Knopfdruck zur Wochenliste hinzufügen — beim Hinzufügen wird die gewünschte Portionszahl abgefragt
 - Portionszahl pro Rezept nachträglich anpassbar (direkt in der Wochenliste)
 - Immer sichtbares Panel auf der rechten Seite
+- Zeigt die **Gesamt-kcal der Woche** (portionsgewichtet, nur wenn Nährwerte vorhanden)
 
 ### Einkaufsliste
 - Automatisch aus allen Rezepten der Wochenliste generiert
@@ -65,6 +71,14 @@ Jeder Tab zeigt die Anzahl der Rezepte in dieser Kategorie. Zusätzlich steht ei
 3. **Vorschau**: erkannte Rezepte mit Titel und Zutatenanzahl
 4. **Importieren**: bereits vorhandene Rezepte (gleicher Titel) werden übersprungen
 
+### Import von URL (Via Netlify Function)
+1. **URL eingeben** — z.B. `https://www.chefkoch.de/rezepte/...`
+2. **Laden** — die Netlify Function ruft die Seite server-seitig ab (umgeht CORS) und extrahiert strukturierte Daten aus `JSON-LD` (`schema.org/Recipe`)
+3. **Vorschau**: Titel, Zutaten, Beschreibung, Kochzeit, Portionen, Kategorien und Nährwerte werden angezeigt
+4. **Importieren**: Rezept wird direkt übernommen
+
+Extrahierte Felder: `name`, `recipeIngredient`, `recipeInstructions`, `totalTime`, `recipeYield`, `recipeCategory`, `nutrition` (kcal, Eiweiß, Fett, KH). Fallback auf `og:description` / `meta description` wenn keine Zubereitung im JSON-LD vorhanden.
+
 ---
 
 ## Datenmodell
@@ -86,7 +100,13 @@ localStorage['wochenliste']  → JSON-Array von { id, portions }
   portions:    number,       // Portionen (default: 2)
   reference:   string,       // Kochbuch, URL o.ä. (optional)
   description: string,
-  ingredients: Ingredient[]
+  ingredients: Ingredient[],
+  nutrition: {
+    kcal:    number|null,    // kcal pro Portion
+    protein: number|null,    // Eiweiß in g pro Portion
+    fat:     number|null,    // Fett in g pro Portion
+    carbs:   number|null,    // Kohlenhydrate in g pro Portion
+  }
 }
 ```
 
@@ -185,12 +205,32 @@ Beispiel: Rezept für 2 Portionen, gewählt 4 → Faktor 2:
 
 ---
 
+## Nährwerte
+
+Nährwerte (kcal, Eiweiß, Fett, Kohlenhydrate) werden **pro Portion** gespeichert und angezeigt.
+
+### Herkunft der Werte
+| Quelle | Beschreibung |
+|---|---|
+| **URL-Import** | Automatisch aus `schema.org/NutritionInformation` (JSON-LD) der Rezeptseite extrahiert |
+| **Manuelle Eingabe** | Im Rezept-Formular unter „Nährwerte pro Portion" eingebbar |
+| **Basis-Rezepte** | Alle 40 vorinstallierten Rezepte haben geschätzte Werte basierend auf ihren Zutaten |
+| **Migration** | Beim App-Start werden fehlende Nährwerte für gespeicherte Rezepte automatisch aus den Basis-Daten ergänzt |
+
+### Anzeige
+- **Rezeptkarte**: kcal-Wert als orangefarbener Badge
+- **Detaildialog**: vollständige Nährwerte (kcal · Eiweiß · Fett · Kohlenhydrate)
+- **Wochenliste**: Gesamt-kcal der Woche (portionsgewichtet: `kcal × gewählte Portionen ÷ Rezept-Portionen`)
+
+---
+
 ## Technologie
 
 - **Vanilla HTML/CSS/JavaScript** — kein Framework, kein Build-Tool
 - **Tailwind CSS** v3 via Play CDN
 - **mammoth.js** v1.8 via CDN — konvertiert `.docx` → Plain Text im Browser
 - **localStorage** — Datenpersistenz, kein Server nötig
+- **Netlify Functions** — serverlose Node.js-Funktion für URL-Import (CORS-Bypass)
 
 ### app.js Struktur
 
