@@ -14,7 +14,7 @@ const STORAGE_KEYS = {
 
 const RECIPE_TABS = [
   'Alle', 'Pasta', 'Reis', 'Curry', 'Suppe',
-  'Fisch', 'Fleisch', 'Vegetarisch', 'Salat', 'Eintopf'
+  'Fisch', 'Fleisch', 'Vegetarisch', 'Salat', 'Eintopf', 'Ohne Kategorie'
 ];
 
 const IMPORT_CATEGORIES = [
@@ -211,11 +211,15 @@ const RecipeStore = {
     }
 
     if (State.activeRecipeTab && State.activeRecipeTab !== 'Alle') {
-      const tabLc = State.activeRecipeTab.toLowerCase();
-      list = list.filter(r =>
-        r.categories.some(c => c.toLowerCase().includes(tabLc)) ||
-        r.title.toLowerCase().includes(tabLc)
-      );
+      if (State.activeRecipeTab === 'Ohne Kategorie') {
+        list = list.filter(r => !r.categories || r.categories.length === 0);
+      } else {
+        const tabLc = State.activeRecipeTab.toLowerCase();
+        list = list.filter(r =>
+          r.categories.some(c => c.toLowerCase().includes(tabLc)) ||
+          r.title.toLowerCase().includes(tabLc)
+        );
+      }
     }
 
     return list;
@@ -810,6 +814,8 @@ const Render = {
     for (const tab of RECIPE_TABS) {
       if (tab === 'Alle') {
         tabCounts[tab] = allRecipes.length;
+      } else if (tab === 'Ohne Kategorie') {
+        tabCounts[tab] = allRecipes.filter(r => !r.categories || r.categories.length === 0).length;
       } else {
         const tl = tab.toLowerCase();
         tabCounts[tab] = allRecipes.filter(r =>

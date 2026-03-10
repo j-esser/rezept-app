@@ -33,7 +33,7 @@ Doppelklick auf `index.html` → öffnet sich direkt im Browser via `file://`.
 ### Kategorien-Reiter
 Rezepte werden über eine horizontale Tab-Leiste gefiltert:
 
-`Alle` · `Pasta` · `Reis` · `Curry` · `Suppe` · `Fisch` · `Fleisch` · `Vegetarisch` · `Salat` · `Eintopf`
+`Alle` · `Pasta` · `Reis` · `Curry` · `Suppe` · `Fisch` · `Fleisch` · `Vegetarisch` · `Salat` · `Eintopf` · `Ohne Kategorie`
 
 Jeder Tab zeigt die Anzahl der Rezepte in dieser Kategorie. Zusätzlich steht eine Freitextsuche zur Verfügung (filtert Titel, Zutaten, Beschreibung, Kategorien).
 

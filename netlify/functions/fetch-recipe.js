@@ -77,7 +77,7 @@ exports.handler = async (event) => {
     };
   }
 
-  const recipe = mapToAppFormat(recipeSchema, url);
+  const recipe = mapToAppFormat(recipeSchema, url, html);
   return {
     statusCode: 200,
     headers: CORS_HEADERS,
@@ -112,16 +112,43 @@ function isRecipe(obj) {
   return type === 'Recipe';
 }
 
-function mapToAppFormat(schema, sourceUrl) {
+function mapToAppFormat(schema, sourceUrl, html) {
+  const description = extractInstructions(schema.recipeInstructions)
+    || extractMetaDescription(html)
+    || '';
   return {
     title:       extractText(schema.name) || 'Unbekanntes Rezept',
-    description: extractInstructions(schema.recipeInstructions),
+    description,
     cookTime:    parseDuration(schema.totalTime || schema.cookTime) || 40,
     portions:    parseYield(schema.recipeYield) || 2,
     reference:   sourceUrl,
     categories:  extractCategories(schema.recipeCategory),
     ingredients: (schema.recipeIngredient || []).map(parseIngredient),
   };
+}
+
+function extractMetaDescription(html) {
+  if (!html) return '';
+  // og:description first (usually more detailed)
+  const og = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{20,})["']/i)
+           || html.match(/<meta[^>]+content=["']([^"']{20,})["'][^>]+property=["']og:description["']/i);
+  if (og) return decodeHtmlEntities(og[1]);
+  // fallback: meta name=description
+  const m = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{20,})["']/i)
+          || html.match(/<meta[^>]+content=["']([^"']{20,})["'][^>]+name=["']description["']/i);
+  if (m) return decodeHtmlEntities(m[1]);
+  return '';
+}
+
+function decodeHtmlEntities(str) {
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .trim();
 }
 
 function extractText(val) {
@@ -134,9 +161,11 @@ function extractText(val) {
 
 function extractInstructions(instructions) {
   if (!instructions) return '';
-  if (typeof instructions === 'string') return stripHtml(instructions);
-  if (Array.isArray(instructions)) {
-    return instructions
+  let text = '';
+  if (typeof instructions === 'string') {
+    text = stripHtml(instructions);
+  } else if (Array.isArray(instructions)) {
+    text = instructions
       .map(step => {
         if (typeof step === 'string') return stripHtml(step);
         return stripHtml(step.text || step.name || '');
@@ -144,7 +173,8 @@ function extractInstructions(instructions) {
       .filter(Boolean)
       .join(' ');
   }
-  return '';
+  // Ignore placeholder text shorter than 30 chars (e.g. just "Zubereitung")
+  return text.length >= 30 ? text : '';
 }
 
 function extractCategories(cat) {
