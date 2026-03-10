@@ -1256,7 +1256,10 @@ Knoblauch in Olivenöl anbraten...</pre>
           <div class="flex flex-wrap gap-3 text-sm text-stone-500">
             ${recipe.cookTime ? `<span>⏱ ${recipe.cookTime} Min.</span>` : ''}
             <span>👤 ${recipe.portions || 2} Portionen</span>
-            ${recipe.reference ? `<span>📖 ${escHtml(recipe.reference)}</span>` : ''}
+            ${recipe.reference ? (recipe.reference.startsWith('http')
+              ? `<a href="${escHtml(recipe.reference)}" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-1 text-orange-600 hover:underline">📖 Quelle öffnen</a>`
+              : `<span>📖 ${escHtml(recipe.reference)}</span>`) : ''}
           </div>
         </div>
         <button class="btn-icon text-xl" data-action="close-modal" title="Schließen">✕</button>
