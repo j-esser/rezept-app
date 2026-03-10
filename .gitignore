@@ -1,0 +1,4 @@
+node_modules/
+.netlify/
+rezepte-backup*.json
+.DS_Store

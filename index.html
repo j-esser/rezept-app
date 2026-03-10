@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Meine Rezepte">
+  <title>Meine Rezepte</title>
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { orange: '#f97316', green: '#16a34a' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- mammoth.js für .docx Import -->
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="flex h-[100dvh] overflow-hidden bg-stone-50 font-sans">
+
+  <!-- ============================================================
+       LEFT SIDEBAR (desktop only, collapsible)
+  ============================================================ -->
+  <aside id="sidebar" class="sidebar flex-col z-10 hidden xl:flex">
+    <!-- Branding + Collapse Button -->
+    <div class="p-5 border-b border-stone-100 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 overflow-hidden">
+        <span class="text-2xl flex-shrink-0">🍽️</span>
+        <h1 class="text-lg font-bold text-stone-800 leading-tight whitespace-nowrap">Meine<br>Rezepte</h1>
+      </div>
+      <button data-action="toggle-sidebar" class="btn-icon flex-shrink-0 text-stone-400" title="Einklappen">‹</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 py-3 overflow-hidden">
+      <button data-tab="rezepte" class="nav-tab active w-full flex items-center gap-3 px-5 py-3 text-sm text-left">
+        <span class="text-lg">📋</span><span class="sidebar-label"> Rezepte</span>
+      </button>
+      <button data-tab="wochenliste" class="nav-tab w-full flex items-center gap-3 px-5 py-3 text-sm text-left">
+        <span class="text-lg">📅</span><span class="sidebar-label"> Wochenliste</span>
+        <span id="nav-woche-count" class="ml-auto bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-0.5 rounded-full hidden">0</span>
+      </button>
+      <button data-tab="einkaufsliste" class="nav-tab w-full flex items-center gap-3 px-5 py-3 text-sm text-left">
+        <span class="text-lg">🛒</span><span class="sidebar-label"> Einkaufsliste</span>
+      </button>
+      <button data-tab="importieren" class="nav-tab w-full flex items-center gap-3 px-5 py-3 text-sm text-left">
+        <span class="text-lg">📂</span><span class="sidebar-label"> Importieren</span>
+      </button>
+    </nav>
+
+    <!-- Actions -->
+    <div class="p-4 border-t border-stone-100 space-y-2 overflow-hidden">
+      <button data-action="new-recipe" class="btn-primary w-full flex items-center justify-center gap-2 whitespace-nowrap">
+        <span class="text-lg leading-none">+</span><span class="sidebar-label"> Neues Rezept</span>
+      </button>
+      <div class="flex gap-2 sidebar-label">
+        <button data-action="backup-export" class="btn-outline flex-1 text-xs flex items-center justify-center gap-1" title="Alle Rezepte sichern">
+          ⬆ Backup
+        </button>
+        <label class="btn-outline flex-1 text-xs flex items-center justify-center gap-1 cursor-pointer" title="Backup wiederherstellen">
+          ⬇ Wiederherstellen
+          <input type="file" accept=".json" data-role="backup-import" class="hidden">
+        </label>
+      </div>
+    </div>
+  </aside>
+
+  <!-- SIDEBAR EXPAND TAB (desktop, visible when sidebar is collapsed) -->
+  <button id="sidebar-expand-tab" data-action="toggle-sidebar"
+          class="hidden sidebar-edge-tab left-0 rounded-r-lg" title="Aufklappen">›</button>
+
+  <!-- ============================================================
+       CENTER COLUMN: mobile header + main content
+  ============================================================ -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Mobile Header -->
+    <header id="mobile-header" class="xl:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-stone-100 flex-shrink-0 z-10 shadow-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🍽️</span>
+        <span class="font-bold text-stone-800 text-base">Meine Rezepte</span>
+      </div>
+      <button data-action="new-recipe" class="btn-primary text-sm px-3 py-1.5">+ Neu</button>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 overflow-y-auto main-content-mobile">
+      <div class="flex items-center justify-center h-full text-stone-400">
+        <div class="text-center">
+          <div class="text-5xl mb-3">🍳</div>
+          <p>Lädt...</p>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ============================================================
+       RIGHT PANEL: WOCHENLISTE (desktop only, collapsible)
+  ============================================================ -->
+  <aside id="wochenliste-panel" class="flex-col bg-white border-l border-stone-100 z-10 hidden xl:flex">
+    <div class="p-4 border-b border-stone-100 flex items-center justify-between gap-2">
+      <button data-action="toggle-panel" class="btn-icon flex-shrink-0 text-stone-400" title="Einklappen">›</button>
+      <h2 class="font-semibold text-stone-700 flex items-center gap-2 overflow-hidden whitespace-nowrap">
+        <span>📅</span> Wochenliste
+      </h2>
+    </div>
+    <div id="wochenliste-panel-content" class="flex-1 overflow-y-auto p-3">
+    </div>
+    <div class="p-3 border-t border-stone-100 space-y-2">
+      <button data-action="go-to-einkauf" class="btn-primary w-full text-sm flex items-center justify-center gap-2">
+        <span>🛒</span> Einkaufsliste
+      </button>
+      <button data-action="clear-woche" class="btn-outline w-full text-sm text-red-500 border-red-200 hover:bg-red-50">
+        Leeren
+      </button>
+    </div>
+  </aside>
+
+  <!-- PANEL EXPAND TAB (desktop, visible when panel is collapsed) -->
+  <button id="panel-expand-tab" data-action="toggle-panel"
+          class="hidden sidebar-edge-tab right-0 rounded-l-lg" title="Aufklappen">‹</button>
+
+  <!-- ============================================================
+       BOTTOM NAVIGATION (mobile only)
+  ============================================================ -->
+  <nav id="mobile-nav" class="xl:hidden fixed bottom-0 inset-x-0 bg-white border-t border-stone-200 z-20 flex mobile-nav-safe">
+    <button data-tab="rezepte" class="mobile-nav-item active">
+      <span class="mobile-nav-icon">📋</span>
+      <span>Rezepte</span>
+    </button>
+    <button data-tab="wochenliste" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📅</span>
+      <span>Woche</span>
+      <span id="mobile-nav-badge" class="mobile-nav-badge hidden">0</span>
+    </button>
+    <button data-tab="einkaufsliste" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🛒</span>
+      <span>Einkauf</span>
+    </button>
+    <button data-tab="importieren" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📂</span>
+      <span>Import</span>
+    </button>
+  </nav>
+
+  <!-- ============================================================
+       MODAL OVERLAY
+  ============================================================ -->
+  <div id="modal-overlay" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center overflow-y-auto py-6 px-4">
+    <div id="modal-box" class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-auto">
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+  ============================================================ -->
+  <div id="toast-container" class="fixed bottom-20 right-4 xl:bottom-5 xl:right-5 z-[100] flex flex-col gap-2 pointer-events-none">
+  </div>
+
+  <!-- ============================================================
+       PRINT: Einkaufsliste
+  ============================================================ -->
+  <div id="print-only" class="hidden">
+  </div>
+
+  <script src="baseline-recipes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
