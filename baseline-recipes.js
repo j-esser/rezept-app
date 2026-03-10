@@ -57,7 +57,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 45,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 620,
+      "protein": 16,
+      "fat": 42,
+      "carbs": 42
+    }
   },
   {
     "id": "r_1772621457909_10dkb",
@@ -180,7 +186,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 45,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 680,
+      "protein": 14,
+      "fat": 28,
+      "carbs": 90
+    }
   },
   {
     "id": "r_1772621457909_v0c00",
@@ -223,7 +235,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 45,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 380,
+      "protein": 9,
+      "fat": 8,
+      "carbs": 65
+    }
   },
   {
     "id": "r_1772621457909_l6suy",
@@ -296,7 +314,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 520,
+      "protein": 16,
+      "fat": 30,
+      "carbs": 46
+    }
   },
   {
     "id": "r_1772621457909_p0c3n",
@@ -354,7 +378,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 70,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 420,
+      "protein": 18,
+      "fat": 14,
+      "carbs": 52
+    }
   },
   {
     "id": "r_1772621457909_p246b",
@@ -457,7 +487,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 390,
+      "protein": 11,
+      "fat": 10,
+      "carbs": 62
+    }
   },
   {
     "id": "r_1772621457910_bng9k",
@@ -545,7 +581,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 650,
+      "protein": 12,
+      "fat": 32,
+      "carbs": 80
+    }
   },
   {
     "id": "r_1772621457910_k8hdn",
@@ -613,7 +655,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 480,
+      "protein": 14,
+      "fat": 28,
+      "carbs": 42
+    }
   },
   {
     "id": "r_1772621457910_ba1or",
@@ -681,7 +729,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 60,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 540,
+      "protein": 10,
+      "fat": 34,
+      "carbs": 48
+    }
   },
   {
     "id": "r_1772621457910_lf1sn",
@@ -759,7 +813,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 560,
+      "protein": 8,
+      "fat": 18,
+      "carbs": 88
+    }
   },
   {
     "id": "r_1772621457910_q3b1q",
@@ -842,7 +902,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 360,
+      "protein": 10,
+      "fat": 14,
+      "carbs": 48
+    }
   },
   {
     "id": "r_1772621457910_qhwg7",
@@ -930,7 +996,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 60,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 520,
+      "protein": 14,
+      "fat": 22,
+      "carbs": 62
+    }
   },
   {
     "id": "r_1772621457910_5fpa1",
@@ -1003,7 +1075,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 420,
+      "protein": 12,
+      "fat": 22,
+      "carbs": 44
+    }
   },
   {
     "id": "r_1772621457911_85x10",
@@ -1116,7 +1194,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 35,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 580,
+      "protein": 22,
+      "fat": 38,
+      "carbs": 28
+    }
   },
   {
     "id": "r_1772621484425_93bk9",
@@ -1189,7 +1273,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 680,
+      "protein": 28,
+      "fat": 26,
+      "carbs": 80
+    }
   },
   {
     "id": "r_1772621484425_t5ehd",
@@ -1222,7 +1312,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 20,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 720,
+      "protein": 38,
+      "fat": 30,
+      "carbs": 68
+    }
   },
   {
     "id": "r_1772621484425_nfvrd",
@@ -1280,7 +1376,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 20,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 480,
+      "protein": 10,
+      "fat": 20,
+      "carbs": 62
+    }
   },
   {
     "id": "r_1772621484426_9bl1s",
@@ -1333,7 +1435,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 640,
+      "protein": 22,
+      "fat": 28,
+      "carbs": 76
+    }
   },
   {
     "id": "r_1772621484426_r5l1f",
@@ -1391,7 +1499,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 760,
+      "protein": 32,
+      "fat": 34,
+      "carbs": 78
+    }
   },
   {
     "id": "r_1772621484426_anj69",
@@ -1439,7 +1553,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 20,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 560,
+      "protein": 22,
+      "fat": 18,
+      "carbs": 76
+    }
   },
   {
     "id": "r_1772621484426_tm4ai",
@@ -1532,7 +1652,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 620,
+      "protein": 20,
+      "fat": 18,
+      "carbs": 88
+    }
   },
   {
     "id": "r_1772621484427_1gbkr",
@@ -1585,7 +1711,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 50,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 680,
+      "protein": 24,
+      "fat": 30,
+      "carbs": 72
+    }
   },
   {
     "id": "r_1772621484427_4iv09",
@@ -1653,7 +1785,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 20,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 580,
+      "protein": 28,
+      "fat": 12,
+      "carbs": 84
+    }
   },
   {
     "id": "r_1772621484427_tvchp",
@@ -1716,7 +1854,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 50,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 560,
+      "protein": 18,
+      "fat": 18,
+      "carbs": 76
+    }
   },
   {
     "id": "r_1772621484427_13dle",
@@ -1789,7 +1933,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 50,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 520,
+      "protein": 22,
+      "fat": 12,
+      "carbs": 78
+    }
   },
   {
     "id": "r_1772621503978_gmsyu",
@@ -1882,7 +2032,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 560,
+      "protein": 18,
+      "fat": 14,
+      "carbs": 88
+    }
   },
   {
     "id": "r_1772621503979_o0jig",
@@ -1960,7 +2116,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 480,
+      "protein": 14,
+      "fat": 12,
+      "carbs": 78
+    }
   },
   {
     "id": "r_1772621503979_e0rjf",
@@ -2033,7 +2195,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 520,
+      "protein": 18,
+      "fat": 16,
+      "carbs": 72
+    }
   },
   {
     "id": "r_1772621503980_6q2kw",
@@ -2116,7 +2284,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 580,
+      "protein": 8,
+      "fat": 18,
+      "carbs": 96
+    }
   },
   {
     "id": "r_1772621503980_mvo04",
@@ -2184,7 +2358,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 620,
+      "protein": 10,
+      "fat": 26,
+      "carbs": 86
+    }
   },
   {
     "id": "r_1772621503981_nt2e0",
@@ -2257,7 +2437,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 30,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 440,
+      "protein": 14,
+      "fat": 22,
+      "carbs": 44
+    }
   },
   {
     "id": "r_1772621503981_kg4ow",
@@ -2269,7 +2455,13 @@ const BASELINE_RECIPES = [
     "ingredients": [],
     "cookTime": 60,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 460,
+      "protein": 18,
+      "fat": 8,
+      "carbs": 76
+    }
   },
   {
     "id": "r_1772621546615_jvlnt",
@@ -2327,7 +2519,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 520,
+      "protein": 18,
+      "fat": 12,
+      "carbs": 78
+    }
   },
   {
     "id": "r_1772621546616_zxw5g",
@@ -2395,7 +2593,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 560,
+      "protein": 16,
+      "fat": 18,
+      "carbs": 80
+    }
   },
   {
     "id": "r_1772621584220_k2hwg",
@@ -2458,7 +2662,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 680,
+      "protein": 48,
+      "fat": 30,
+      "carbs": 18
+    }
   },
   {
     "id": "r_1772621584220_f4177",
@@ -2531,7 +2741,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 720,
+      "protein": 52,
+      "fat": 38,
+      "carbs": 12
+    }
   },
   {
     "id": "r_1772621584221_ei7uu",
@@ -2604,7 +2820,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 460,
+      "protein": 28,
+      "fat": 24,
+      "carbs": 8
+    }
   },
   {
     "id": "r_1772621584221_150me",
@@ -2677,7 +2899,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 35,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 520,
+      "protein": 28,
+      "fat": 22,
+      "carbs": 42
+    }
   },
   {
     "id": "r_1772621584222_z971c",
@@ -2740,7 +2968,13 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 580,
+      "protein": 36,
+      "fat": 22,
+      "carbs": 54
+    }
   },
   {
     "id": "r_1773152841812_qwn49",
@@ -2813,7 +3047,12 @@ const BASELINE_RECIPES = [
     ],
     "cookTime": 40,
     "portions": 2,
-    "reference": ""
+    "reference": "",
+    "nutrition": {
+      "kcal": 620,
+      "protein": 26,
+      "fat": 20,
+      "carbs": 84
+    }
   }
 ];
-

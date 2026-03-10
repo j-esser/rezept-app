@@ -165,8 +165,22 @@ const Storage = {
         cookTime:  r.cookTime  || 40,
         portions:  r.portions  || 2,
         reference: r.reference || '',
+        nutrition: r.nutrition || { kcal: null, protein: null, fat: null, carbs: null },
       }));
       this.saveRecipes();
+    } else if (typeof BASELINE_RECIPES !== 'undefined') {
+      // Migration: copy nutrition from baseline for existing recipes that have none
+      const baselineMap = Object.fromEntries(BASELINE_RECIPES.map(r => [r.id, r]));
+      let migrated = false;
+      State.recipes = State.recipes.map(r => {
+        if (!r.nutrition && baselineMap[r.id]?.nutrition) {
+          migrated = true;
+          return { ...r, nutrition: baselineMap[r.id].nutrition };
+        }
+        if (!r.nutrition) return { ...r, nutrition: { kcal: null, protein: null, fat: null, carbs: null } };
+        return r;
+      });
+      if (migrated) this.saveRecipes();
     }
   },
 
@@ -251,6 +265,12 @@ const RecipeStore = {
       cookTime:    Math.max(1, parseInt(data.cookTime) || 40),
       portions:    Math.max(1, parseInt(data.portions) || 2),
       reference:   (data.reference || '').trim(),
+      nutrition:   data.nutrition ? {
+        kcal:    data.nutrition.kcal    != null ? Math.round(data.nutrition.kcal)    : null,
+        protein: data.nutrition.protein != null ? Math.round(data.nutrition.protein) : null,
+        fat:     data.nutrition.fat     != null ? Math.round(data.nutrition.fat)     : null,
+        carbs:   data.nutrition.carbs   != null ? Math.round(data.nutrition.carbs)   : null,
+      } : { kcal: null, protein: null, fat: null, carbs: null },
     };
   },
 };
@@ -908,10 +928,11 @@ const Render = {
 
         ${catBadges ? `<div class="flex flex-wrap gap-1 mb-2">${catBadges}</div>` : ''}
 
-        <div class="flex gap-3 text-xs text-stone-400 mb-3">
+        <div class="flex gap-3 text-xs text-stone-400 mb-3 flex-wrap">
           ${recipe.cookTime ? `<span>⏱ ${recipe.cookTime} Min.</span>` : ''}
           <span>👤 ${recipe.portions || 2} Port.</span>
           <span>${recipe.ingredients.length} Zutaten</span>
+          ${recipe.nutrition?.kcal != null ? `<span class="text-orange-500 font-medium">${recipe.nutrition.kcal} kcal</span>` : ''}
         </div>
 
         <button class="btn-secondary w-full text-xs"
@@ -949,6 +970,17 @@ const Render = {
       return;
     }
 
+    // Total kcal for the week (only if at least one recipe has data)
+    let totalKcal = 0;
+    let hasKcal = false;
+    for (const { recipe: r, portions } of entries) {
+      if (r.nutrition?.kcal != null) {
+        const factor = (r.portions || 2) > 0 ? portions / (r.portions || 2) : 1;
+        totalKcal += Math.round(r.nutrition.kcal * factor);
+        hasKcal = true;
+      }
+    }
+
     container.innerHTML = entries.map(({ recipe: r, portions }) => `
       <div class="woche-panel-item" data-id="${r.id}">
         <button class="btn-icon text-xs text-red-300 hover:text-red-500 flex-shrink-0"
@@ -958,7 +990,10 @@ const Render = {
         </span>
         <span class="text-xs text-stone-400 flex-shrink-0">${portions}P</span>
       </div>
-    `).join('');
+    `).join('') + (hasKcal ? `
+      <div class="mt-3 pt-3 border-t border-stone-100 text-xs text-center text-stone-400">
+        Gesamt ca. <span class="font-semibold text-orange-500">${totalKcal} kcal</span> diese Woche
+      </div>` : '');
   },
 
   // ── Wochenliste Main View ─────────────────────────────────
@@ -1261,6 +1296,16 @@ Knoblauch in Olivenöl anbraten...</pre>
                    class="inline-flex items-center gap-1 text-orange-600 hover:underline">📖 Quelle öffnen</a>`
               : `<span>📖 ${escHtml(recipe.reference)}</span>`) : ''}
           </div>
+          ${(() => {
+            const n = recipe.nutrition;
+            if (!n || (n.kcal == null && n.protein == null && n.fat == null && n.carbs == null)) return '';
+            return `<div class="flex flex-wrap gap-3 mt-2 text-sm">
+              ${n.kcal    != null ? `<span class="font-semibold text-orange-600">${n.kcal} kcal</span>` : ''}
+              ${n.protein != null ? `<span class="text-stone-500">🥩 ${n.protein}g Eiweiß</span>` : ''}
+              ${n.fat     != null ? `<span class="text-stone-500">🧈 ${n.fat}g Fett</span>` : ''}
+              ${n.carbs   != null ? `<span class="text-stone-500">🌾 ${n.carbs}g KH</span>` : ''}
+            </div>`;
+          })()}
         </div>
         <button class="btn-icon text-xl" data-action="close-modal" title="Schließen">✕</button>
       </div>
@@ -1384,6 +1429,36 @@ Knoblauch in Olivenöl anbraten...</pre>
           <input type="text" id="recipe-reference" class="input-field"
                  placeholder="Bestand · Kochbuch · URL"
                  value="${escHtml(r.reference || '')}">
+        </div>
+
+        <!-- Nutrition -->
+        <div>
+          <label class="block text-sm font-medium text-stone-700 mb-1.5">
+            Nährwerte pro Portion
+            <span class="text-xs font-normal text-stone-400 ml-1">(optional)</span>
+          </label>
+          <div class="grid grid-cols-4 gap-2">
+            <div>
+              <label class="block text-xs text-stone-500 mb-1">kcal</label>
+              <input type="number" id="recipe-kcal" class="input-field text-center"
+                     placeholder="—" min="0" value="${r.nutrition?.kcal ?? ''}">
+            </div>
+            <div>
+              <label class="block text-xs text-stone-500 mb-1">Eiweiß (g)</label>
+              <input type="number" id="recipe-protein" class="input-field text-center"
+                     placeholder="—" min="0" value="${r.nutrition?.protein ?? ''}">
+            </div>
+            <div>
+              <label class="block text-xs text-stone-500 mb-1">Fett (g)</label>
+              <input type="number" id="recipe-fat" class="input-field text-center"
+                     placeholder="—" min="0" value="${r.nutrition?.fat ?? ''}">
+            </div>
+            <div>
+              <label class="block text-xs text-stone-500 mb-1">KH (g)</label>
+              <input type="number" id="recipe-carbs" class="input-field text-center"
+                     placeholder="—" min="0" value="${r.nutrition?.carbs ?? ''}">
+            </div>
+          </div>
         </div>
 
         <!-- Description -->
@@ -1999,6 +2074,12 @@ const Handlers = {
       cookTime:    Math.max(1, parseInt(form.querySelector('#recipe-cooktime')?.value) || 40),
       portions:    Math.max(1, parseInt(form.querySelector('#recipe-portions')?.value) || 2),
       reference:   form.querySelector('#recipe-reference')?.value.trim() || '',
+      nutrition: {
+        kcal:    form.querySelector('#recipe-kcal')?.value    !== '' ? parseInt(form.querySelector('#recipe-kcal')?.value)    : null,
+        protein: form.querySelector('#recipe-protein')?.value !== '' ? parseInt(form.querySelector('#recipe-protein')?.value) : null,
+        fat:     form.querySelector('#recipe-fat')?.value     !== '' ? parseInt(form.querySelector('#recipe-fat')?.value)     : null,
+        carbs:   form.querySelector('#recipe-carbs')?.value   !== '' ? parseInt(form.querySelector('#recipe-carbs')?.value)   : null,
+      },
     };
   },
 

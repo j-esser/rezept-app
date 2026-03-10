@@ -124,7 +124,26 @@ function mapToAppFormat(schema, sourceUrl, html) {
     reference:   sourceUrl,
     categories:  extractCategories(schema.recipeCategory),
     ingredients: (schema.recipeIngredient || []).map(parseIngredient),
+    nutrition:   extractNutrition(schema.nutrition),
   };
+}
+
+function extractNutrition(n) {
+  if (!n) return { kcal: null, protein: null, fat: null, carbs: null };
+  return {
+    kcal:    parseNutritionValue(n.calories),
+    protein: parseNutritionValue(n.proteinContent),
+    fat:     parseNutritionValue(n.fatContent),
+    carbs:   parseNutritionValue(n.carbohydrateContent),
+  };
+}
+
+function parseNutritionValue(val) {
+  if (val == null) return null;
+  const m = String(val).match(/[\d.,]+/);
+  if (!m) return null;
+  const n = Math.round(parseFloat(m[0].replace(',', '.')));
+  return isNaN(n) ? null : n;
 }
 
 function extractMetaDescription(html) {
